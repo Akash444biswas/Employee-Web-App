@@ -1,0 +1,182 @@
+import React from "react";
+import Header from "./Layouts/Header";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const CreateEmployee = () => {
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [mobileNumber, setMobileNumber] = useState();
+  const [designation, setDesignation] = useState();
+  const [gender, setGender] = useState();
+  const [selectedCourse, setSelectedCourse] = useState("");
+
+  const navigate = useNavigate();
+  const handleSubmit = (e) => {
+    console.log("hi");
+    e.preventDefault();
+    console.log(e);
+    axios
+      .post("http://localhost:3001/create-employees", {
+        name,
+        email,
+        mobileNumber,
+        designation,
+        gender,
+        selectedCourse,
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.data === "Success") {
+          navigate("/employees-list");
+        }
+      })
+      .catch((e) => console.log("error", e));
+    setShowSuccessAlert(true);
+  };
+
+  return (
+    <>
+      <Header></Header>
+
+      <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
+        <div className="bg-white p-3 rounded w-25">
+          <h2>Create Employee</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="email">
+                <strong>Name</strong>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter Name"
+                autoComplete="off"
+                name="email"
+                className="form-control rounded-0"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email">
+                <strong>Email</strong>
+              </label>
+              <input
+                type="email"
+                placeholder="Enter Email"
+                autoComplete="off"
+                name="email"
+                className="form-control rounded-0"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="email">
+                <strong>Mobile Number</strong>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter Mobile Number"
+                autoComplete="off"
+                name="text"
+                className="form-control rounded-0"
+                onChange={(e) => setMobileNumber(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="designation">
+                <strong>Designation</strong>
+              </label>
+              <select
+                className="form-select rounded-0"
+                value={designation}
+                onChange={(e) => setDesignation(e.target.value)}
+              >
+                <option value="">Select Designation</option>
+                <option value="HR">HR</option>
+                <option value="Manager">Manager</option>
+                <option value="Sales">Sales</option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="gender">
+                <strong>Gender</strong>
+              </label>
+              <select
+                className="form-select rounded-0"
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="courses">
+                <strong>Course</strong>
+              </label>
+              <div>
+                <div className="form-check">
+                  <input
+                    type="radio"
+                    id="mca"
+                    value="MCA"
+                    className="form-check-input"
+                    checked={selectedCourse === "MCA"}
+                    onChange={(e) => setSelectedCourse(e.target.value)}
+                  />
+                  <label htmlFor="mca" className="form-check-label">
+                    MCA
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="radio"
+                    id="bca"
+                    value="BCA"
+                    className="form-check-input"
+                    checked={selectedCourse === "BCA"}
+                    onChange={(e) => setSelectedCourse(e.target.value)}
+                  />
+                  <label htmlFor="bca" className="form-check-label">
+                    BCA
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="radio"
+                    id="bsc"
+                    value="BSC"
+                    className="form-check-input"
+                    checked={selectedCourse === "BSC"}
+                    onChange={(e) => setSelectedCourse(e.target.value)}
+                  />
+                  <label htmlFor="bsc" className="form-check-label">
+                    BSC
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" className="btn btn-success w-100 rounded-0">
+              Submit
+            </button>
+          </form>
+        </div>
+        {showSuccessAlert && (
+          <div className="alert alert-success mt-3" role="alert">
+            Success! Your form has been submitted.
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default CreateEmployee;
